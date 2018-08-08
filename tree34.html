@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>::-webkit-scrollbar{display:none;}html,body{overflow:hidden;margin:0;}</style>
+</head>
+<body>
+<div id="mountNode"></div>
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+<script src="/g6.js"></script>
+<script src="/plugins.js"></script>
+<script src="/jquery-3.2.1.min.js"></script>
+<script src="/d3-4.13.0.min.js"></script>
+<script>
+
+  var _d = d3,
+    forceSimulation = _d.forceSimulation,
+    forceLink = _d.forceLink,
+    forceManyBody = _d.forceManyBody,
+    forceCenter = _d.forceCenter,
+    forceCollide = _d.forceCollide;
+
+	
+
+	
+	
+	
+	
+G6.registerNode('customNode', {
+          afterDraw: function(cfg, group, keyShape){
+            var model = cfg.model;
+            var radius = cfg.size[0]/2;
+            // 填充透明度设置为0
+            keyShape.attr({
+              fillOpacity: 1
+            });
+            // 如果激活设置激活样式
+            if(model.active){
+              keyShape.attr({
+                stroke: "red",
+                lineWidth: 3,
+                strokeOpacity: 1
+              });
+            }
+            // 添加节点文本
+            group.addShape('text', {
+              attrs: {
+                x: cfg.x + radius,
+                y: cfg.y,
+                text: model.id,
+                fill: "#333",
+                textAlign: 'left',
+                fontSize: 16
+              }
+            });
+          }
+        }, 'circle');
+		
+
+
+  var graph = new G6.Graph({
+    id: 'mountNode', // dom id
+    height: window.innerHeight,
+    //plugins: [template, nodeSizeMapper, nodeColorMapper, edgeSizeMapper],
+
+  });
+
+
+  var dagre = new G6.Layouts['Dagre']({
+    nodesep: function nodesep() {
+      return graph.getWidth() / 50;
+    },
+    ranksep: function ranksep() {
+      return graph.getHeight() / 25;
+    },
+    marginx: function marginx() {
+      return graph.getWidth() / 8;
+    },
+    marginy: function marginy() {
+      return graph.getHeight() / 8;
+    },
+
+    useEdgeControlPoint: false
+  });
+
+
+  
+  
+  
+  
+  
+  
+  var data2={"nodes":[{"name":"Myriel","id":"0.0",label:"n1",color:"red",shape:"rect"},
+  {"name":"Napoleon","id":"1.0",label:"n2",shape:'circle'},
+  {"name":"MlleBaptistine","id":"2.0",label:"n3"},
+  {"name":"n3","id":"3.0",label:"n4"}],
+  "edges":[{"source":"0.0","target":"1.0","id":"0"},
+  {"source":"2.0","target":"0.0","id":"1"},
+  {"source":"2.0","target":"3.0","id":"2"}]};
+  
+  
+  const data33 = {
+  "nodes": [
+    {
+      "shape": "customNode",
+      "id": "node1",
+      "x": 50,
+      "y": 100
+    },
+    {
+      "shape": "customNode",
+      "id": "node2",
+      "x": 250,
+      "y": 100
+    }
+  ],
+};
+
+
+
+var data4={
+  "nodes": [
+    {
+      "shape": "customNode",
+      "x": 113.75075853058863,
+      "y": 141.07648975049753,
+      "value": 30,
+      "active": true,
+      "id": "养老金列表"
+    },
+    {
+      "shape": "customNode",
+      "x": 259.71700290946836,
+      "y": 283.9253078044872,
+      "value": 30,
+      "active": true,
+      "id": "选择城市"
+    },
+    {
+      "shape": "customNode",
+      "x": 266.0422961356286,
+      "y": 484.2191598410916,
+      "value": 20,
+      "active": false,
+      "id": "疫苗接种"
+    },
+    {
+      "shape": "customNode",
+      "x": 406.17797032648446,
+      "y": 493.7423429895307,
+      "value": 40,
+      "active": true,
+      "id": "服务授权页"
+    },
+    {
+      "shape": "customNode",
+      "x": 705.2097316060047,
+      "y": 351.320202058842,
+      "value": 40,
+      "active": true,
+      "id": "城市服务-通知详情页"
+    },
+    {
+      "shape": "customNode",
+      "x": 585.1472051673845,
+      "y": 193.03866034065186,
+      "value": 10,
+      "active": false,
+      "id": "服务通知列表"
+    },
+    {
+      "shape": "customNode",
+      "x": 442.8450500238397,
+      "y": 295.6340039614207,
+      "value": 100,
+      "active": true,
+      "id": "城市服务首页"
+    },
+    {
+      "shape": "customNode",
+      "x": 581.67753319213,
+      "y": 418.7100802157355,
+      "value": 80,
+      "active": false,
+      "id": "交通违法缴罚"
+    }
+  ],
+  "edges": [
+    {
+      
+      "source": "城市服务首页",
+      "id": "d599f74c",
+      "value": 100,
+      "target": "选择城市"
+    },
+    {
+      
+      "source": "城市服务首页",
+      "id": "33125f85",
+      "value": 70,
+      "target": "城市服务-通知详情页"
+    },
+    {
+      
+      "source": "城市服务首页",
+      "id": "132bfb5f",
+      "value": 40,
+      "target": "疫苗接种"
+    },
+    {
+      
+      "source": "城市服务首页",
+      "id": "56a79834",
+      "value": 60,
+      "target": "服务通知列表"
+    },
+    {
+      
+      "source": "城市服务-通知详情页",
+      "id": "0331a255",
+      "value": 30,
+      "target": "交通违法缴罚"
+    },
+    {
+      
+      "source": "服务通知列表",
+      "id": "140255cf",
+      "value": 20,
+      "target": "交通违法缴罚"
+    },
+    {
+      
+      "source": "交通违法缴罚",
+      "id": "8f58fac2",
+      "value": 10,
+      "target": "服务授权页"
+    },
+    {
+      
+      "source": "选择城市",
+      "id": "78ce8a52",
+      "value": 18,
+      "target": "服务授权页"
+    },
+    {
+      
+      "source": "疫苗接种",
+      "id": "8d536b8a",
+      "value": 24,
+      "target": "服务授权页"
+    },
+    {
+      
+      "source": "选择城市",
+      "id": "b12ecf81",
+      "value": 10,
+      "target": "养老金列表"
+    }
+  ]
+}
+
+
+
+
+          var data = {
+            nodes: [
+                { id: '0', label: '起始', shape: 'customNode', size: 40 ,x:50,y:100},
+                { id: '1', label: '步骤一' },
+                { id: '2', label: '步骤二' },
+                { id: '3', label: '条件' },
+                { id: '4.1', label: '分步骤一' },
+                { id: '4.2', label: '分步骤二' },
+                { id: '5', label: '汇总' },
+                { id: '6', label: '结束', shape: 'customNode', size: 40,x:250,y:100 },
+            ],
+            edges: [
+                { id: '0-1', source: '0', target: '1' },
+                { id: '1-2', source: '1', target: '2' },
+                { id: '2-3', source: '2', target: '3' },
+                { id: '3-4.1', source: '3', target: '4.1' },
+                { id: '3-4.2', source: '3', target: '4.2' },
+                { id: '4.1-5', source: '4.1', target: '5' },
+                { id: '4.2-5', source: '4.2', target: '5' },
+                { id: '5-6', source: '5', target: '6' },
+            ]
+        };
+  
+  graph.read(data4);
+  graph.changeLayout(dagre);
+
+
+</script>
+</body>
+</html>

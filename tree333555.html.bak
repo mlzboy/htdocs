@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>::-webkit-scrollbar{display:none;}html,body{overflow:hidden;margin:0;}</style>
+</head>
+<body>
+<div id="mountNode"></div>
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+<script src="/g6.js"></script>
+<script src="/plugins.js"></script>
+<script src="/jquery-3.2.1.min.js"></script>
+<script src="/d3-4.13.0.min.js"></script>
+<script>
+
+const data = {
+  "nodes": [
+    {
+      "shape": "customNode",
+      "id": "node1",
+
+	  label:"html"
+    },
+    {
+      "shape": "customNode",
+      "id": "node2",
+
+	  label:"div[1]"
+    },
+	    {
+      "shape": "customNode",
+      "id": "node3",
+
+	  label:"div[2]"
+    },
+	    {
+      "shape": "customNode",
+      "id": "node4",
+
+	  label:"div[1]"
+    },
+	    {
+      "shape": "customNode",
+      "id": "node5",
+
+	  label:"div[1]"
+    },
+
+  ],
+  "edges":[{"id":"111","source":"node1","target":"node2","color":"#000"},{"id":"222","source":"node1","target":"node3","color":"#000"},
+  {"id":"333","source":"node1","target":"node3","color":"#000"},
+    {"id":"444","source":"node1","target":"node4","color":"#000"},
+ 
+  ]
+};
+G6.registerNode('customNode', {
+  draw(item){
+    const group = item.getGraphicGroup();
+    const model = item.getModel();
+
+ group.addShape('text', {
+      attrs: {
+        x: -15,
+        y: -7,
+        fill: '#000',
+        text: model.label,
+        textBaseline: 'top'
+      }
+    });
+
+
+    return group.addShape('circle', {
+      attrs: {
+        x: 0,
+        y: 0,
+		r:20,
+		stroke:'#000'
+
+      }
+    });
+  }
+});
+
+
+
+
+		
+
+
+  var graph = new G6.Graph({
+    id: 'mountNode', // dom id
+	width:window.innerWeight,
+    height: window.innerHeight,
+    //plugins: [template, nodeSizeMapper, nodeColorMapper, edgeSizeMapper],
+    animate: true,
+    layout: {}
+  });
+
+
+  var dagre = new G6.Layouts['Dagre']({
+    nodesep: function nodesep() {
+      return graph.getWidth() / 50;
+    },
+    ranksep: function ranksep() {
+      return graph.getHeight() / 25;
+    },
+    marginx: function marginx() {
+      return graph.getWidth() / 8;
+    },
+    marginy: function marginy() {
+      return graph.getHeight() / 8;
+    },
+
+    useEdgeControlPoint: false
+  });
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  graph.read(data);
+  //graph.changeLayout(dagre);
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>::-webkit-scrollbar{display:none;}html,body{overflow:hidden;margin:0;}</style>
+</head>
+<body>
+<div id="mountNode"></div>
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+<script src="/g6.js"></script>
+
+<script>
+
+
+
+const data = {
+  "nodes": [
+    {
+      "shape": "customNode",
+      "id": "node1",
+      "x": 50,
+      "y": 100
+    },
+    {
+      "shape": "customNode",
+      "id": "node2",
+      "x": 250,
+      "y": 100
+    }
+  ],
+};
+
+G6.registerNode('customNode', {
+  draw(item){
+    const group = item.getGraphicGroup();
+    const model = item.getModel();
+
+    return group.addShape('circle', {
+      attrs: {
+        x: 0,
+        y: 0,
+		r:20,
+		stroke:'green'
+
+      }
+    });
+  }
+});
+
+const graph = new G6.Graph({
+  container: 'mountNode',  // dom 容器 或 容器ID
+  width: 500,              // 画布宽
+  height: 500,             // 画布高
+});
+graph.read(data);
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+   <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>城市服务</title>
+<script src="https://a.alipayobjects.com/jquery/jquery/1.11.1/jquery.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/g6/1.2.8/g6.min.js"></script>
+      </head>
+      <body>
+          <div id="c1"></div>
+ <script type="text/javascript">
+data={
+  "nodes": [
+    {
+      "shape": "customNode",
+      "x": 113.75075853058863,
+      "y": 141.07648975049753,
+      "value": 30,
+      "active": true,
+      "id": "养老金列表"
+    },
+    {
+      "shape": "customNode",
+      "x": 259.71700290946836,
+      "y": 283.9253078044872,
+      "value": 30,
+      "active": true,
+      "id": "选择城市"
+    },
+    {
+      "shape": "customNode",
+      "x": 266.0422961356286,
+      "y": 484.2191598410916,
+      "value": 20,
+      "active": false,
+      "id": "疫苗接种"
+    },
+    {
+      "shape": "customNode",
+      "x": 406.17797032648446,
+      "y": 493.7423429895307,
+      "value": 40,
+      "active": true,
+      "id": "服务授权页"
+    },
+    {
+      "shape": "customNode",
+      "x": 705.2097316060047,
+      "y": 351.320202058842,
+      "value": 40,
+      "active": true,
+      "id": "城市服务-通知详情页"
+    },
+    {
+      "shape": "customNode",
+      "x": 585.1472051673845,
+      "y": 193.03866034065186,
+      "value": 10,
+      "active": false,
+      "id": "服务通知列表"
+    },
+    {
+      "shape": "customNode",
+      "x": 442.8450500238397,
+      "y": 295.6340039614207,
+      "value": 100,
+      "active": true,
+      "id": "城市服务首页"
+    },
+    {
+      "shape": "customNode",
+      "x": 581.67753319213,
+      "y": 418.7100802157355,
+      "value": 80,
+      "active": false,
+      "id": "交通违法缴罚"
+    }
+  ],
+  "edges": [
+    {
+      "shape": "customEdge",
+      "source": "城市服务首页",
+      "id": "d599f74c",
+      "value": 100,
+      "target": "选择城市"
+    },
+    {
+      "shape": "customEdge",
+      "source": "城市服务首页",
+      "id": "33125f85",
+      "value": 70,
+      "target": "城市服务-通知详情页"
+    },
+    {
+      "shape": "customEdge",
+      "source": "城市服务首页",
+      "id": "132bfb5f",
+      "value": 40,
+      "target": "疫苗接种"
+    },
+    {
+      "shape": "customEdge",
+      "source": "城市服务首页",
+      "id": "56a79834",
+      "value": 60,
+      "target": "服务通知列表"
+    },
+    {
+      "shape": "customEdge",
+      "source": "城市服务-通知详情页",
+      "id": "0331a255",
+      "value": 30,
+      "target": "交通违法缴罚"
+    },
+    {
+      "shape": "customEdge",
+      "source": "服务通知列表",
+      "id": "140255cf",
+      "value": 20,
+      "target": "交通违法缴罚"
+    },
+    {
+      "shape": "customEdge",
+      "source": "交通违法缴罚",
+      "id": "8f58fac2",
+      "value": 10,
+      "target": "服务授权页"
+    },
+    {
+      "shape": "customEdge",
+      "source": "选择城市",
+      "id": "78ce8a52",
+      "value": 18,
+      "target": "服务授权页"
+    },
+    {
+      "shape": "customEdge",
+      "source": "疫苗接种",
+      "id": "8d536b8a",
+      "value": 24,
+      "target": "服务授权页"
+    },
+    {
+      "shape": "customEdge",
+      "source": "选择城市",
+      "id": "b12ecf81",
+      "value": 10,
+      "target": "养老金列表"
+    }
+  ]
+};
+  var Util = G6.Util;
+  var Layout = G6.Layout;
+  // 自定义节点
+  G6.registNode('customNode', {
+    afterDraw: function(cfg, group, keyShape){
+      var model = cfg.model;
+      var radius = cfg.size[0]/2;
+      // 填充透明度设置为0
+      keyShape.attr({
+        fillOpacity: 1
+      });
+      // 如果激活设置激活样式
+      if(model.active){
+        keyShape.attr({
+          stroke: "#646464",
+          lineWidth: 6,
+          strokeOpacity: 0.9
+        });
+      }
+      // 添加节点文本
+      group.addShape('text', {
+        attrs: {
+          x: cfg.x + radius,
+          y: cfg.y,
+          text: model.id,
+          fill: "#333",
+          textAlign: 'left',
+          fontSize: 16
+        }
+      });
+    }
+  }, 'circle');
+
+  var layout = new Layout.Force({
+    nodes: data.nodes,
+    edges: data.edges
+  });
+  var net = new G6.Net({
+    id: 'c1', // 容器ID
+    height: 450,        // 画布高
+    useAnchor: null
+  });
+  net.source(data.nodes, data.edges);
+  net.node()
+    .color('#36E6BE')
+    .size(function(obj){
+      var sizeDomain = 100;
+      return obj.value/100 * sizeDomain;
+    });
+  net.edge()
+    .size(function(obj){
+      var sizeDomain = 10;
+      return obj.value/100 * sizeDomain;
+    })
+    .label('value');
+  net.render();
+  layout.onNodeChange = function(id, point){
+    var node = net.find(id);
+    net.update(node, {
+      x: point.x*60+300,
+      y: point.y*60+300
+    });
+    net.refresh();
+  };
+
+</script>
+
+      </body>
+    </html>
+          

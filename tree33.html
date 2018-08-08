@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>::-webkit-scrollbar{display:none;}html,body{overflow:hidden;margin:0;}</style>
+</head>
+<body>
+<div id="mountNode"></div>
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+<script src="/g6.js"></script>
+<script src="/plugins.js"></script>
+<script src="/jquery-3.2.1.min.js"></script>
+<script src="/d3-4.13.0.min.js"></script>
+<script>
+$.getJSON('/g6-index.json', function(data) {
+  var _d = d3,
+    forceSimulation = _d.forceSimulation,
+    forceLink = _d.forceLink,
+    forceManyBody = _d.forceManyBody,
+    forceCenter = _d.forceCenter,
+    forceCollide = _d.forceCollide;
+
+  var Template = G6.Plugins['template.maxSpanningForest'];
+
+  var template = new Template();
+  var graph = new G6.Graph({
+    id: 'mountNode', // dom id
+    height: window.innerHeight,
+    //plugins: [template, nodeSizeMapper, nodeColorMapper, edgeSizeMapper],
+    animate: true,
+    layout: {
+      //processer: force
+    }
+  });
+
+
+  var dagre = new G6.Layouts['Dagre']({
+    nodesep: function nodesep() {
+      return graph.getWidth() / 50;
+    },
+    ranksep: function ranksep() {
+      return graph.getHeight() / 25;
+    },
+    marginx: function marginx() {
+      return graph.getWidth() / 8;
+    },
+    marginy: function marginy() {
+      return graph.getHeight() / 8;
+    },
+
+    useEdgeControlPoint: false
+  });
+
+
+  
+  
+  
+  
+  
+  
+  var data2={"nodes":[{"name":"Myriel","id":"0.0",label:"n1",color:"red",shape:"rect"},
+  {"name":"Napoleon","id":"1.0",label:"n2",shape:'circle'},
+  {"name":"MlleBaptistine","id":"2.0",label:"n3"},
+  {"name":"n3","id":"3.0",label:"n4"}],
+  "edges":[{"source":"0.0","target":"1.0","id":"0"},
+  {"source":"2.0","target":"0.0","id":"1"},
+  {"source":"2.0","target":"3.0","id":"2"}]};
+  
+  
+  
+          var data = {
+            nodes: [
+                { id: '0', label: '起始', shape: 'circle', size: 40 },
+                { id: '1', label: '步骤一' },
+                { id: '2', label: '步骤二' },
+                { id: '3', label: '条件' },
+                { id: '4.1', label: '分步骤一' },
+                { id: '4.2', label: '分步骤二' },
+                { id: '5', label: '汇总' },
+                { id: '6', label: '结束', shape: 'circle', size: 40 },
+            ],
+            edges: [
+                { id: '0-1', source: '0', target: '1' },
+                { id: '1-2', source: '1', target: '2' },
+                { id: '2-3', source: '2', target: '3' },
+                { id: '3-4.1', source: '3', target: '4.1' },
+                { id: '3-4.2', source: '3', target: '4.2' },
+                { id: '4.1-5', source: '4.1', target: '5' },
+                { id: '4.2-5', source: '4.2', target: '5' },
+                { id: '5-6', source: '5', target: '6' },
+            ]
+        };
+  
+  graph.read(data2);
+  graph.changeLayout(dagre);
+
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>::-webkit-scrollbar{display:none;}html,body{overflow:hidden;margin:0;}</style>
+</head>
+<body>
+<div id="mountNode"></div>
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+<script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-2.0.5/build/g6.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-2.0.5/build/plugins.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/lib/jquery-3.2.1.min.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/lib/d3-4.13.0.min.js"></script>
+<script>
+$.getJSON('/assets/data/g6-index.json', function(data) {
+  var _d = d3,
+    forceSimulation = _d.forceSimulation,
+    forceLink = _d.forceLink,
+    forceManyBody = _d.forceManyBody,
+    forceCenter = _d.forceCenter,
+    forceCollide = _d.forceCollide;
+
+  var Template = G6.Plugins['template.maxSpanningForest'];
+  var Mapper = G6.Plugins['tool.d3.mapper'];
+  var nodeSizeMapper = new Mapper('node', 'weight', 'size', [8, 20], {
+    legendCfg: null
+  });
+  var edgeSizeMapper = new Mapper('edge', 'weight', 'size', [1, 8], {
+    legendCfg: null
+  });
+  var nodeColorMapper = new Mapper('node', 'weight', 'color', ['#E0F5FF', '#BAE7FF', '#91D5FF', '#69C0FF', '#3DA0F2', '#1581E6', '#0860BF'], {
+    legendCfg: null
+  });
+  var force = {
+    execute: function execute() {
+      var nodes = this.nodes;
+      var edges = this.edges;
+      var graph = this.graph;
+      var width = graph.getWidth();
+      var height = graph.getHeight();
+      var simulation = forceSimulation(nodes).force('charge', forceManyBody().distanceMax(width * 3)).force('link', forceLink(G6.Util.cloneDeep(edges)).id(function(model) {
+        return model.id;
+      }).strength(1)).force('center', forceCenter(width / 2, height / 2)).force('collision', forceCollide().radius(function(model) {
+        return model.width / 2 * 1.2;
+      }));
+      simulation.stop();
+      for (var i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
+        simulation.tick();
+      }
+      nodes.forEach(function(node) {
+        delete node.vx;
+        delete node.vy;
+      });
+    }
+  };
+  var template = new Template();
+  var graph = new G6.Graph({
+    id: 'mountNode', // dom id
+    height: window.innerHeight,
+    plugins: [template, nodeSizeMapper, nodeColorMapper, edgeSizeMapper],
+    animate: true,
+    layout: {
+      processer: force
+    }
+  });
+  var circle = new G6.Layouts['Circle']({
+    sort: function sort(a, b) {
+      return a.weight - b.weight;
+    }
+  });
+  var grid = new G6.Layouts['Grid']({
+    sort: function sort(a, b) {
+      return b.weight - a.weight;
+    }
+  });
+  var dagre = new G6.Layouts['Dagre']({
+    nodesep: function nodesep() {
+      return graph.getWidth() / 50;
+    },
+    ranksep: function ranksep() {
+      return graph.getHeight() / 25;
+    },
+    marginx: function marginx() {
+      return graph.getWidth() / 8;
+    },
+    marginy: function marginy() {
+      return graph.getHeight() / 8;
+    },
+
+    useEdgeControlPoint: false
+  });
+  var spiral = new G6.Layouts['ArchimeddeanSpiral']({
+    sort: function sort(a, b) {
+      return b.weight - a.weight;
+    }
+  });
+  graph.edge({
+    style: function style(model) {
+      return {
+        stroke: graph.find(model.target).getModel().color,
+        strokeOpacity: 0.8
+      };
+    }
+  });
+  graph.read(data);
+  setInterval(function() {
+    if (document.visibilityState === 'visible') {
+      var layouts = [circle, dagre, force, grid, spiral];
+      layouts = layouts.filter(function(layout) {
+        return layout !== graph.getLayout();
+      });
+      var layout = layouts[parseInt(layouts.length * Math.random())];
+      graph.changeLayout(layout);
+    }
+  }, 2000);
+});
+</script>
+</body>
+</html>
